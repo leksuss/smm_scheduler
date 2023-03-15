@@ -153,4 +153,7 @@ cython_debug/
 
 /media
 notes.md
+
+# Google API creds
 credentials.json
+token.json

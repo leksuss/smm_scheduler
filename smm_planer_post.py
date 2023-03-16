@@ -6,9 +6,9 @@ from retry import retry
 
 
 @retry(NetworkError, tries=3, delay=1, backoff=5)
-def post_image_file(image_files, tg_chat_id, bot):
+def post_image_file(image_files, tg_chat_id, bot, post_text=None):
     with open(image_files, 'rb') as file:
-       message = bot.send_photo(chat_id=tg_chat_id, photo=file)
+       message = bot.send_photo(chat_id=tg_chat_id, photo=file, caption=post_text)
     return f"https://t.me/smm_planer_dev/{message['message_id']}"
 
 
@@ -27,16 +27,15 @@ def post_context_to_tg(post_text, post_image):
     if not post_image and not post_text:
         return None   
     try:
-        if post_image:
+        if post_image and post_text:
+            post_link_photo = post_image_file(post_image, tg_chat_id, 
+                                              telegram_bot, post_text)
+        elif post_image:
             post_link_photo = post_image_file(post_image, tg_chat_id, telegram_bot)
-        if post_text:
+        elif post_text:
             post_link_text = post_message(post_text, tg_chat_id, telegram_bot)
             return post_link_text
         return post_link_photo
     except NetworkError:
         print('Ошибка подключения')
         return None
-    
-
-#TELEGRAM_TOKEN = 6158617927:AAGRfhA2_b4Cw6MYoUx4anUNJU4u-_tMXH8
-#TG_CHAT_ID = @smm_planer_dev

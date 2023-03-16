@@ -157,3 +157,6 @@ notes.md
 # Google API creds
 credentials.json
 token.json
+
+# MacOS files
+.DS_Store

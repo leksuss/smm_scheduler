@@ -1,8 +1,6 @@
 import requests
 from dotenv import load_dotenv
 from os import environ
-from pathlib import Path
-from random import randint
 from requests.exceptions import HTTPError
 from type_annotation import UploadPhoto, SavePhoto
 
@@ -18,9 +16,7 @@ def post_context_to_vk(post_text, post_image):
     except HTTPError as err:
         print('Ошибка опубликования')
         print(err.args[0])        
-    #finally:
-        #Path(file_name).unlink()
-    
+        
 
 def get_upload_vk_server_url(vk_access_token, vk_group_id, api_version):
     
@@ -120,6 +116,3 @@ def post_comic_in_vk(vk_access_token, vk_group_id, api_version, post_image, post
     post_url = post_wall_photo(vk_access_token, vk_group_id, api_version, post_text, save_photo)
     return post_url
     
-
-if __name__ == "__main__":
-   post_context_to_vk('post_text',"D:\devman\space\images\spacex1.jpg")

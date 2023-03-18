@@ -4,27 +4,27 @@ from api_services import google_api
 
 from environs import Env
 
+DELAY_BETWEEN_CHECKS = 60  # in seconds
+
 env = Env()
 env.read_env()
 
-DELAY_BETWEEN_CHECKS = 60  # in seconds
-
-spreadsheet_id = env('SPREADSHEET_ID')
+sheet_id = env('SPREADSHEET_ID')
 
 
 def publish_to_OK(text, picture):
-    pass
+    return 'https://foo.com/ok'
 
 
 def publish_to_TG(text, picture):
-    pass
+    return 'https://foo.com/tg'
 
 
 def publish_to_VK(text, picture):
-    pass
+    return 'https://foo.com/vk'
 
 
-SOCIAL_MEDIA = {
+SOCIAL_MEDIA_NAMES = {
     'OK': publish_to_OK,
     'TG': publish_to_TG,
     'VK': publish_to_VK,
@@ -39,15 +39,22 @@ def get_picture(picture_url):
     return response.content
 
 
-unpublished_posts = google_api.get_unpublished_posts(spreadsheet_id)
+creds = google_api.get_credentials()
+sheet_service = google_api.get_spreadsheet_service(creds)
+doc_service = google_api.get_document_service(creds)
+
+unpublished_posts = google_api.get_unpublished_posts(sheet_id, sheet_service)
 
 if unpublished_posts:
-    sm_publish_statuses = dict.fromkeys(SOCIAL_MEDIA)
     for post in unpublished_posts:
-        text = google_api.get_publishing_text(post['Текст'])
+
+        text = google_api.get_publishing_text(post['Текст'], doc_service)
         picture = get_picture(post['Фото'])
-        for sm in SOCIAL_MEDIA:
-            if post[sm].strip():
-                link = SOCIAL_MEDIA[sm](text, picture)
-                sm_publish_statuses[sm] = link
-    print(sm_publish_statuses)
+
+        for sm_name in SOCIAL_MEDIA_NAMES:
+            if post[sm_name]:
+                link_or_none = SOCIAL_MEDIA_NAMES[sm_name](text, picture)
+                post[sm_name] = link_or_none
+        google_api.update_post_row(
+            SOCIAL_MEDIA_NAMES, post, sheet_id, sheet_service
+        )

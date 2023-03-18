@@ -35,4 +35,4 @@ def post_context_to_ok(post_text, post_image):
     }
     attachment = json.dumps(attachment)
     response = ok.mediatopic.post(gid=ok_group_id, attachment=attachment, type='GROUP_THEME')
-    return f'https://ok.ru/group/70000002564571/topic/{response.json()}'
+    return f'https://ok.ru/group/{ok_group_id}/topic/{response.json()}'

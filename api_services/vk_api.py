@@ -32,16 +32,15 @@ def get_upload_vk_server_url(vk_access_token, vk_group_id, api_version):
     if 'error' in upload_url_response:
         raise HTTPError(upload_url_response['error']['error_msg'])          
     return upload_url_response['response']['upload_url']
-        
 
-def upload_post_image(url, post_image):
-    
-    with open(post_image, 'rb') as file:
-            files = {
-                'photo': file
-            }
-            response = requests.post(url, files=files)
-    response.raise_for_status()    
+
+def upload_post_image(url, raw_image):
+
+    files = {
+        'photo': ('any_filename.jpg', raw_image)
+    }
+    response = requests.post(url, files=files)
+    response.raise_for_status()
     return response
 
 
@@ -115,4 +114,3 @@ def post_comic_in_vk(vk_access_token, vk_group_id, api_version, post_image, post
     save_photo = save_wall_photo(vk_access_token, vk_group_id,  api_version, upload_photo)
     post_url = post_wall_photo(vk_access_token, vk_group_id, api_version, post_text, save_photo)
     return post_url
-    

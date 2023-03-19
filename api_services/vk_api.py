@@ -2,7 +2,19 @@ import requests
 from dotenv import load_dotenv
 from os import environ
 from requests.exceptions import HTTPError
-from type_annotation import UploadPhoto, SavePhoto
+from dataclasses import dataclass
+
+
+@dataclass
+class UploadPhoto:
+    photo: str
+    server: str
+    hash_wall: str
+
+@dataclass
+class SavePhoto:
+    owner_id: str
+    media_id: str
 
 
 def post_context_to_vk(post_text, post_image):
@@ -34,20 +46,21 @@ def get_upload_vk_server_url(vk_access_token, vk_group_id, api_version):
     return upload_url_response['response']['upload_url']
 
 
-def upload_post_image(url, raw_image):
+def upload_post_image(url, file_name):
 
-    files = {
-        'photo': ('any_filename.jpg', raw_image)
-    }
-    response = requests.post(url, files=files)
+    with open(file_name, 'rb') as file:
+            files = {
+                'photo': file
+            }
+            response = requests.post(url, files=files)
     response.raise_for_status()
     return response
 
 
-def upload_wall_photo(post_image, url):
+def upload_wall_photo(post_image, url):    
     
     upload_file_response = upload_post_image(url, post_image)
-    upload_wall_photo_response = upload_file_response.json()    
+    upload_wall_photo_response = upload_file_response.json()        
     if 'error' in upload_wall_photo_response:
         raise HTTPError(upload_wall_photo_response['error']['error_msg'])  
     elif upload_wall_photo_response['photo'] == '[]':
@@ -56,7 +69,7 @@ def upload_wall_photo(post_image, url):
         photo=upload_wall_photo_response['photo'],
         server=upload_wall_photo_response['server'],
         hash_wall=upload_wall_photo_response['hash']
-    )                    
+    )          
     return upload_photo
                  
 
@@ -99,9 +112,7 @@ def post_wall_photo(vk_access_token, vk_group_id, api_version, post_text, save_p
     response = requests.post(url, params=payloads)
     response.raise_for_status()
     post_wall_photo_response = response.json()
-    post_id = post_wall_photo_response['response']['post_id']
-    print(post_id)
-    print(f'https://vk.com/club{vk_group_id}?w=wall-{vk_group_id}_{post_id}%2Fall')
+    post_id = post_wall_photo_response['response']['post_id']     
     if 'error' in post_wall_photo_response:
         raise HTTPError(post_wall_photo_response['error']['error_msg'])
     return f'https://vk.com/club{vk_group_id}?w=wall-{vk_group_id}_{post_id}%2Fall' 

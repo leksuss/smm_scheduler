@@ -35,13 +35,13 @@ def get_upload_vk_server_url(vk_access_token, vk_group_id, api_version):
     return upload_url_response['response']['upload_url']
 
 
-def upload_post_image(url, file_name):
+def upload_post_image(url, post_image):
 
-    with open(file_name, 'rb') as file:
-            files = {
-                'photo': file
-            }
-            response = requests.post(url, files=files)
+    image = requests.get(post_image, stream=True)
+    file = {
+        'photo': ("image.jpg", image.raw, image.headers['Content-Type'])
+    }
+    response = requests.post(url, files=file)
     response.raise_for_status()
     return response
 

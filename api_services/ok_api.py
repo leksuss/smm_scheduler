@@ -1,7 +1,9 @@
 from dotenv import load_dotenv
 from os import environ
-from ok_api import OkApi, Upload
+from ok_api import OkApi
 import json
+import requests
+from api_services.vk_api import upload_post_image
 
 
 def post_context_to_ok(post_text, post_image):
@@ -15,8 +17,10 @@ def post_context_to_ok(post_text, post_image):
                application_key=application_key,
                application_secret_key=application_secret_key)
 
-    upload = Upload(ok)
-    upload_response = upload.photo(photos=[post_image, ], group_id=ok_group_id)    
+    
+    answer = ok.photosV2.getUploadUrl(gid=ok_group_id, count=1).json()
+    upload_url = answer.get('upload_url', None)
+    upload_response = upload_post_image(upload_url, post_image).json()
     for photo_id in upload_response['photos']:
         post_image_token = upload_response['photos'][photo_id]['token']    
     attachment = {

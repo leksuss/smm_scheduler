@@ -6,9 +6,11 @@ from retry import retry
 
 
 @retry(NetworkError, tries=3, delay=1, backoff=5)
-def post_image_file(image_files, tg_chat_id, bot, post_text=None):
-    with open(image_files, 'rb') as file:
-       message = bot.send_photo(chat_id=tg_chat_id, photo=file, caption=post_text)
+def post_image_file(raw_image, tg_chat_id, bot, post_text=None):
+    file = {
+        'photo': ('any_filename.jpg', raw_image)
+    }
+    message = bot.send_photo(chat_id=tg_chat_id, photo=raw_image, caption=post_text)
     return f"https://t.me/smm_planer_dev/{message['message_id']}"
 
 

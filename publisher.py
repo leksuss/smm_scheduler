@@ -1,60 +1,53 @@
-import requests
+import os
+import time
 
-from api_services import google_api
+from dotenv import load_dotenv
 
-from environs import Env
+from api_services import google_api, odnoklassniki_api, tg_api, vk_api
+
 
 DELAY_BETWEEN_CHECKS = 60  # in seconds
-
-env = Env()
-env.read_env()
-
-sheet_id = env('SPREADSHEET_ID')
-
-
-def publish_to_OK(text, picture):
-    return 'https://foo.com/ok'
-
-
-def publish_to_TG(text, picture):
-    return 'https://foo.com/tg'
-
-
-def publish_to_VK(text, picture):
-    return 'https://foo.com/vk'
-
-
 SOCIAL_MEDIA_NAMES = {
-    'OK': publish_to_OK,
-    'TG': publish_to_TG,
-    'VK': publish_to_VK,
+    'OK': odnoklassniki_api.post_context_to_ok,
+    'TG': tg_api.post_context_to_tg,
+    'VK': vk_api.post_context_to_vk,
 }
 
 
-def get_picture(picture_url):
+def main():
 
-    response = requests.get(picture_url)
-    response.raise_for_status()
+    load_dotenv()
+    sheet_id = os.environ['SPREADSHEET_ID']
+    debug = os.environ['DEBUG']
 
-    return response.content
+    creds = google_api.get_credentials()
+    sheet_service = google_api.get_spreadsheet_service(creds)
+    doc_service = google_api.get_document_service(creds)
 
-
-creds = google_api.get_credentials()
-sheet_service = google_api.get_spreadsheet_service(creds)
-doc_service = google_api.get_document_service(creds)
-
-unpublished_posts = google_api.get_unpublished_posts(sheet_id, sheet_service)
-
-if unpublished_posts:
-    for post in unpublished_posts:
-
-        text = google_api.get_publishing_text(post['Текст'], doc_service)
-        picture = get_picture(post['Фото'])
-
-        for sm_name in SOCIAL_MEDIA_NAMES:
-            if post[sm_name]:
-                link_or_none = SOCIAL_MEDIA_NAMES[sm_name](text, picture)
-                post[sm_name] = link_or_none
-        google_api.update_post_row(
-            SOCIAL_MEDIA_NAMES, post, sheet_id, sheet_service
+    while True:
+        unpublished_posts = google_api.get_unpublished_posts(
+            sheet_id, sheet_service
         )
+        if unpublished_posts:
+            for post in unpublished_posts:
+                text = google_api.get_publishing_text(
+                    post['Текст'], doc_service
+                )
+                for sm_name in SOCIAL_MEDIA_NAMES:
+                    if post[sm_name]:
+                        link_or_none = SOCIAL_MEDIA_NAMES[sm_name](
+                            text, post['Фото']
+                        )
+                        post[sm_name] = link_or_none
+                google_api.update_post_row(
+                    SOCIAL_MEDIA_NAMES, post, sheet_id, sheet_service
+                )
+
+        if debug:
+            break
+
+        time.sleep(DELAY_BETWEEN_CHECKS)
+
+
+if __name__ == '__main__':
+    main()

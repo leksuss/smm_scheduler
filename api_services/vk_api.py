@@ -3,18 +3,7 @@ from dotenv import load_dotenv
 from os import environ
 from requests.exceptions import HTTPError
 from dataclasses import dataclass
-
-
-@dataclass
-class UploadPhoto:
-    photo: str
-    server: str
-    hash_wall: str
-
-@dataclass
-class SavePhoto:
-    owner_id: str
-    media_id: str
+from api_services.type_annotation import UploadPhoto, SavePhoto
 
 
 def post_context_to_vk(post_text, post_image):

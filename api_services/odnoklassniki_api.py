@@ -7,7 +7,7 @@ from api_services.vk_api import upload_post_image
 
 
 def post_context_to_ok(post_text, post_image):
-    
+
     load_dotenv()
     access_token = environ['OK_ACCESS_TOKEN']
     application_key = environ['OK_APPLICATION_KEY']

@@ -16,7 +16,22 @@
 - [API ВКонтакте](https://dev.vk.com/api/callback/getting-started)
 - [API Одноклассники](https://apiok.ru/)
 
+Полученные данные присвоить переменным окружения в файле ".env".
 
+```python
+SPREADSHEET_ID=
+
+TELEGRAM_TOKEN=
+TG_CHAT_ID=
+
+VK_ACCESS_TOKEN=
+VK_GROUP_ID=
+
+OK_ACCESS_TOKEN=
+OK_APPLICATION_KEY=
+OK_APPLICATION_SECRET_KEY=
+OK_GROUP_ID=
+```
 
 ## Запуск
 

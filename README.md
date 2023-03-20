@@ -19,18 +19,15 @@
 Полученные данные присвоить переменным окружения в файле ".env".
 
 ```python
-SPREADSHEET_ID=
-
-TELEGRAM_TOKEN=
-TG_CHAT_ID=
-
-VK_ACCESS_TOKEN=
-VK_GROUP_ID=
-
-OK_ACCESS_TOKEN=
-OK_APPLICATION_KEY=
-OK_APPLICATION_SECRET_KEY=
-OK_GROUP_ID=
+SPREADSHEET_ID=ВАШ_ID_GOOGLE_ТАБЛИЦЫ
+TELEGRAM_TOKEN=ВАШ_ТЕЛЕГРАМ_ТОКЕН
+TG_CHAT_ID=НАЗВАНИЕ_ТЕЛЕГРАМ_КАНАЛА
+VK_ACCESS_TOKEN=ВАШ_КЛЮЧ_ДОСТУПА_ВК
+VK_GROUP_ID=ID_ГРУППЫ_ВК
+OK_ACCESS_TOKEN=ВАШ_ОК_ТОКЕН
+OK_APPLICATION_KEY=ПУБЛИЧНЫЙ_КЛЮЧ_ПРИЛОЖЕНИЯ_ОК
+OK_APPLICATION_SECRET_KEY=СЕКРЕТНЫЙ_КЛЮЧ_ПРИЛОЖЕНИЯ_ОК
+OK_GROUP_ID=ID_ГРУППЫ_ОК
 ```
 
 ## Запуск

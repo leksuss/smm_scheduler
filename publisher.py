@@ -3,6 +3,7 @@ import time
 
 from dotenv import load_dotenv
 
+
 from api_services import google_api, odnoklassniki_api, tg_api, vk_api
 from text_modifier import beautify_text
 
@@ -19,7 +20,7 @@ def main():
 
     load_dotenv()
     sheet_id = os.environ['SPREADSHEET_ID']
-    debug = os.environ['DEBUG']
+    debug = not (os.environ['DEBUG'] == 'False')
 
     creds = google_api.get_credentials()
     sheet_service = google_api.get_spreadsheet_service(creds)

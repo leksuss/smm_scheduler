@@ -6,3 +6,10 @@
 
 ![image](https://user-images.githubusercontent.com/76903715/226282870-012c9b6b-22d3-46cb-a3c9-1084eb179f0c.png)
 
+## Запуск
+
+Для запуска сайта вам понадобится Python третьей версии.
+
+Скачайте код с GitHub. Установите зависимости:
+
+`pip install -r requirements.txt`

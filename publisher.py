@@ -4,6 +4,7 @@ import time
 from dotenv import load_dotenv
 
 from api_services import google_api, odnoklassniki_api, tg_api, vk_api
+from text_modifier import beautify_text
 
 
 DELAY_BETWEEN_CHECKS = 60  # in seconds
@@ -33,6 +34,7 @@ def main():
                 text = google_api.get_publishing_text(
                     post['Текст'], doc_service
                 )
+                text = beautify_text(text)
                 for sm_name in SOCIAL_MEDIA_NAMES:
                     if post[sm_name]:
                         link_or_none = SOCIAL_MEDIA_NAMES[sm_name](

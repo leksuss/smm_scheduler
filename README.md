@@ -38,6 +38,6 @@ OK_GROUP_ID=ID_ГРУППЫ_ОК
 
 `pip install -r requirements.txt`
 
-Запустить
+Запустите:
 
 `phyton publisher.py`

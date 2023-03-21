@@ -1,5 +1,4 @@
-from dotenv import load_dotenv
-from os import environ
+from environs import Env
 from ok_api import OkApi
 import json
 import requests
@@ -8,11 +7,13 @@ from api_services.vk_api import upload_post_image
 
 def post_context_to_ok(post_text, post_image):
 
-    load_dotenv()
-    access_token = environ['OK_ACCESS_TOKEN']
-    application_key = environ['OK_APPLICATION_KEY']
-    application_secret_key = environ['OK_APPLICATION_SECRET_KEY']
-    ok_group_id = environ['OK_GROUP_ID']
+    env = Env()
+    env.read_env()
+
+    access_token = env.str('OK_ACCESS_TOKEN')
+    application_key = env.str('OK_APPLICATION_KEY')
+    application_secret_key = env.str('OK_APPLICATION_SECRET_KEY')
+    ok_group_id = env.int('OK_GROUP_ID')
     ok = OkApi(access_token=access_token,
                application_key=application_key,
                application_secret_key=application_secret_key)

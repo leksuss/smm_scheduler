@@ -1,6 +1,5 @@
 import requests
-from dotenv import load_dotenv
-from os import environ
+from environs import Env
 from requests.exceptions import HTTPError
 from dataclasses import dataclass
 from api_services.type_annotation import UploadPhoto, SavePhoto
@@ -8,9 +7,11 @@ from api_services.type_annotation import UploadPhoto, SavePhoto
 
 def post_context_to_vk(post_text, post_image):
 
-    load_dotenv()
-    vk_access_token = environ['VK_ACCESS_TOKEN']
-    vk_group_id = environ['VK_GROUP_ID']
+    env = Env()
+    env.read_env()
+
+    vk_access_token = env.str('VK_ACCESS_TOKEN')
+    vk_group_id = env.int('VK_GROUP_ID')
     actual_api_version = '5.131'       
     try:
         return post_comic_in_vk(vk_access_token, vk_group_id, actual_api_version, post_image, post_text)

@@ -1,8 +1,6 @@
-import os
 import time
 
-from dotenv import load_dotenv
-
+from environs import Env
 
 from api_services import google_api, odnoklassniki_api, tg_api, vk_api
 from text_modifier import beautify_text
@@ -18,9 +16,11 @@ SOCIAL_MEDIA_NAMES = {
 
 def main():
 
-    load_dotenv()
-    sheet_id = os.environ['SPREADSHEET_ID']
-    debug = not (os.environ['DEBUG'] == 'False')
+    env = Env()
+    env.read_env()
+
+    sheet_id = env.str('SPREADSHEET_ID')
+    debug = env.bool('DEBUG')
 
     creds = google_api.get_credentials()
     sheet_service = google_api.get_spreadsheet_service(creds)

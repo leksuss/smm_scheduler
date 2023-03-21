@@ -1,7 +1,6 @@
+from environs import Env
 import telegram
 from telegram.error import NetworkError
-from dotenv import load_dotenv
-from os import environ
 from retry import retry
 
 
@@ -22,9 +21,11 @@ def post_message(post_text, tg_chat_id, bot):
 
 def post_context_to_tg(post_text, post_image):
 
-    load_dotenv()
-    telegram_token = environ['TELEGRAM_TOKEN']
-    tg_chat_id = environ['TG_CHAT_ID']
+    env = Env()
+    env.read_env()
+
+    telegram_token = env.str('TELEGRAM_TOKEN')
+    tg_chat_id = env.int('TG_CHAT_ID')
     telegram_bot = telegram.Bot(telegram_token)   
     if not post_image and not post_text:
         return None   

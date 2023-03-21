@@ -2,14 +2,14 @@ import time
 
 from environs import Env
 
-from api_services import google_api, odnoklassniki_api, tg_api, vk_api
+from api_services import google_api, odnoklassniki_api, tg, vk_api
 from text_modifier import beautify_text
 
 
 DELAY_BETWEEN_CHECKS = 60  # in seconds
 SOCIAL_MEDIA_NAMES = {
     'OK': odnoklassniki_api.post_context_to_ok,
-    'TG': tg_api.post_context_to_tg,
+    'TG': tg.publish_to_tg,
     'VK': vk_api.post_context_to_vk,
 }
 
